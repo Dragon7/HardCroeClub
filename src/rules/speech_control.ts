@@ -828,7 +828,7 @@ export function initRules_bc_speech_control() {
 				modify(info, message) {
 					if (state.isEnforced) {
 						const replaceSpokenMap = parseStringReplacingSyntax(state.customData?.stringWithReplacingSyntax);
-						let tmp_messages = message.split(" ");
+						const tmp_messages = message.split(" ");
 						tmp_messages.forEach((subject,index) => {
 						for (const [word, sub] of replaceSpokenMap.entries()) {
 								if(subject == word){
