@@ -831,7 +831,7 @@ export function initRules_bc_speech_control() {
 						const tmp_messages = message.split(" ");
 						tmp_messages.forEach((subject,index) => {
 						for (const [word, sub] of replaceSpokenMap.entries()) {
-								if(subject == word){
+								if(subject === word){
 									tmp_messages[index] = sub;
 								}
 							}
