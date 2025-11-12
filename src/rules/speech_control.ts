@@ -828,9 +828,15 @@ export function initRules_bc_speech_control() {
 				modify(info, message) {
 					if (state.isEnforced) {
 						const replaceSpokenMap = parseStringReplacingSyntax(state.customData?.stringWithReplacingSyntax);
+						let tmp_messages = message.split(" ");
+						tmp_messages.forEach((subject,index) => {
 						for (const [word, sub] of replaceSpokenMap.entries()) {
-							message = message.replaceAll(word, sub);
-						}
+								if(subject == word){
+									tmp_messages[index] = sub;
+								}
+							}
+						});
+						message = tmp_messages.join(" ");
 					}
 					return message;
 				},
