@@ -104,18 +104,6 @@ export function initRules_bc_speech_control() {
 				modify: (info, message) => {
 					return state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
 				},
-				allowSend: (msg) => {
-					console.log(state.customData);
-					if (state.isEnforced && msg.hasOOC && !Player.CanTalk()) {
-						state.triggerAttempt();
-						console.log("OOC talk was blocked while gagged");
-						return SpeechHookAllow.BLOCK;
-					}
-					return SpeechHookAllow.ALLOW;
-				},
-				onSend: (msg) => {
-					console.log("speech_garble_whispers test on send");
-				},
 			});
 		},
 		load(state) {
