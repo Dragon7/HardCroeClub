@@ -116,7 +116,8 @@ function parseMsg(msg: string): (SpeechMessageInfo | null) {
 		(Player.ChatSettings?.MuStylePoses && msg.startsWith(":") && msg.length > 3) ? "Emote" : type;
 
 	console.log(msg);
-	const noOOCMessage = msg.replace(/\([^)]*\)*\s?/gs, "");
+	//const noOOCMessage = msg.replace(/\([^)]*\)*\s?/gs, "");
+	const noOOCMessage = msg.replace(/\([^)]*\)\s?/gs, "");
 	const hasOOC: boolean = msg.includes("(");
 
 	console.log(msg);
@@ -238,7 +239,9 @@ export class ModuleSpeech extends BaseModule {
 		// We're sending something, pre-parse the message
 		hookFunction("ChatRoomSendChat", 3, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
+			console.log(inputChat);
 			const msg = inputChat?.value.trim() ?? "";
+			console.log(msg);
 			if (msg.length) {
 				const info = parseMsg(msg);
 				if (info?.type !== "Command")
