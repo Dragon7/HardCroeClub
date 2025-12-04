@@ -102,11 +102,10 @@ export function initRules_bc_speech_control() {
 		init(state) {
 			registerSpeechHook({
 				modify: (info, message) => {
-					console.log("test1231231231");
 					return state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
 				},
 				allowSend: (msg) => {
-					console.log("speech_garble_whispers test allow send");
+					console.log(state.customData);
 					if (state.isEnforced && msg.hasOOC && !Player.CanTalk()) {
 						state.triggerAttempt();
 						console.log("OOC talk was blocked while gagged");
@@ -121,7 +120,6 @@ export function initRules_bc_speech_control() {
 		},
 		load(state) {
 			hookFunction("ChatRoomShouldBlockGaggedOOCMessage", 2, (args, next) => {
-				console.log("hooked gagged ooc garble whisper");
 				if (state.isEnforced && ChatRoomTargetMemberNumber >= 0) return false;
 				return next(args);
 			}, ModuleCategory.Rules);
