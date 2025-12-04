@@ -243,6 +243,8 @@ export class ModuleSpeech extends BaseModule {
 			}
 			const ret = next(args);
 			currentlyProcessedMessage = null;
+
+			console.log(args);
 			return ret;
 		});
 
@@ -260,6 +262,8 @@ export class ModuleSpeech extends BaseModule {
 					args[0] = msg2;
 				}
 			}
+
+			console.log(args);
 			return next(args);
 		});
 
@@ -278,6 +282,8 @@ export class ModuleSpeech extends BaseModule {
 				}
 				(data.Dictionary as ChatMessageDictionary).push({ Tag: "BCX_ORIGINAL_MESSAGE", Text: currentlyProcessedMessage.originalMessage });
 			}
+
+			console.log(args);
 			return next(args);
 		});
 
@@ -294,6 +300,8 @@ export class ModuleSpeech extends BaseModule {
 					data.Content += ` <> ${orig.Text}`;
 				}
 			}
+
+			console.log(args);
 			return next(args);
 		});
 		//#endregion
