@@ -257,6 +257,7 @@ export class ModuleSpeech extends BaseModule {
 			}
 			const ret = next(args);
 			currentlyProcessedMessage = null;
+			console.log("whisper?");
 			return ret;
 		});
 
