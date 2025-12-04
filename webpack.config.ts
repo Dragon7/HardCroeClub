@@ -57,7 +57,7 @@ export default async function (env: WebpackEnv): Promise<Configuration> {
 				writeToDisk: true,
 			},
 		},
-		devtool: "inline-source-map",
+		devtool: env.prod ? "source-map" : "inline-source-map",
 		entry: join(SRC_DIR, "index.ts"),
 		mode,
 		module: {
