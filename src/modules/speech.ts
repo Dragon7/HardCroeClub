@@ -291,9 +291,10 @@ export class ModuleSpeech extends BaseModule {
 					return true;
 				}
 
-				console.log(currentlyProcessedMessage);
+				//console.log(currentlyProcessedMessage);
 			}
 
+			console.log(currentlyProcessedMessage);
 			console.log(args);
 			return next(args);
 		});
