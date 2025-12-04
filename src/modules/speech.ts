@@ -281,6 +281,17 @@ export class ModuleSpeech extends BaseModule {
 					data.Dictionary = [];
 				}
 				(data.Dictionary as ChatMessageDictionary).push({ Tag: "BCX_ORIGINAL_MESSAGE", Text: currentlyProcessedMessage.originalMessage });
+
+				const msg2 = processMsg(currentlyProcessedMessage);
+				// Message is rejected
+				if (msg2 === null) {
+					args[1].target = null;
+					args[1].Dictionary.message.Type = "Typing";
+					args[1].Dictionary.message.Target = null;
+					return true;
+				}
+
+				//console.log(currentlyProcessedMessage);
 			}
 
 			console.log(args);
