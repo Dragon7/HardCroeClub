@@ -316,7 +316,7 @@ export class ModuleSpeech extends BaseModule {
 				
 				console.log(data);
 				console.log(orig);
-				console.log(info);
+				console.log(currentlyProcessedMessage);
 			}
 			return next(args);
 		});
