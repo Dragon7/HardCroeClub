@@ -291,7 +291,7 @@ export class ModuleSpeech extends BaseModule {
 		// 2
 		hookFunction("ChatRoomMessage", 1, (args, next) => {
 			const data = args[0];
-			if (antigarble > 0 &&
+			if (
 				isObject(data) &&
 				data.Type === "Whisper" &&
 				typeof data.Content === "string" &&
