@@ -246,6 +246,20 @@ export class ModuleSpeech extends BaseModule {
 			return ret;
 		});
 
+
+		hookFunction("ChatRoomSendWhisper", 5, (args, next) => {
+			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
+			const msg = inputChat?.value.trim() ?? "";
+			if (msg.length) {
+				const info = parseMsg(msg);
+				if (info?.type !== "Command")
+					currentlyProcessedMessage = info;
+			}
+			const ret = next(args);
+			currentlyProcessedMessage = null;
+			return ret;
+		});
+
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
 		hookFunction("CommandParse", 5, (args, next) => {
 			const msg = args[0].trim();
