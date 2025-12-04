@@ -102,8 +102,8 @@ export function initRules_bc_speech_control() {
 		init(state) {
 			registerSpeechHook({
 				modify: (info, message) => {
-					state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
 					console.log("test1231231231");
+					return state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
 				},
 				allowSend: (msg) => {
 					if (state.isEnforced && msg.hasOOC && !Player.CanTalk()) {
