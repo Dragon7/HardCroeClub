@@ -151,6 +151,7 @@ function processMsg(msg: SpeechMessageInfo | null): string | null {
 	}
 	let result: string | null = msg.originalMessage;
 
+	console.log("test proc");
 	console.groupCollapsed("Processing message: " + msg.originalMessage);
 	console.log("Message: " + JSON.stringify(msg, null, 2));
 
