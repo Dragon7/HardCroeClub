@@ -234,6 +234,7 @@ export class ModuleSpeech extends BaseModule {
 
 		// We're sending something, pre-parse the message
 		hookFunction("ChatRoomSendChat", 5, (args, next) => {
+			console.log("hook check ChatRoomSendChat");
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
 			if (msg.length) {
@@ -243,26 +244,12 @@ export class ModuleSpeech extends BaseModule {
 			}
 			const ret = next(args);
 			currentlyProcessedMessage = null;
-			return ret;
-		});
-
-
-		hookFunction("ChatRoomSendWhisper", 5, (args, next) => {
-			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
-			const msg = inputChat?.value.trim() ?? "";
-			if (msg.length) {
-				const info = parseMsg(msg);
-				if (info?.type !== "Command")
-					currentlyProcessedMessage = info;
-			}
-			const ret = next(args);
-			currentlyProcessedMessage = null;
-			console.log("whisper?");
 			return ret;
 		});
 
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
 		hookFunction("CommandParse", 5, (args, next) => {
+			console.log("hook check CommandParse");
 			const msg = args[0].trim();
 			if (msg && currentlyProcessedMessage) {
 				currentlyProcessedMessage = parseMsg(msg);
@@ -280,6 +267,7 @@ export class ModuleSpeech extends BaseModule {
 
 		//#region Antigarble for pre-garbled whispers
 		hookFunction("ServerSend", 1, (args: any, next) => {
+			console.log("hook check server send");
 			const data = args[1];
 			if (args[0] === "ChatRoomChat" &&
 				currentlyProcessedMessage &&
@@ -297,6 +285,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		hookFunction("ChatRoomMessage", 1, (args, next) => {
+			console.log("hook check ChatRoomMessage");
 			const data = args[0];
 			if (antigarble > 0 &&
 				isObject(data) &&
