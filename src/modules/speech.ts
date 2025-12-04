@@ -129,6 +129,10 @@ function parseMsg(msg: string): (SpeechMessageInfo | null) {
 		if (msg.startsWith("/action ")) msg = msg.replace("/action ", "*");
 	}
 
+	if(type === "Whisper" && SpeechHookAllow.BLOCK){
+		type = "Chat";
+	}
+
 	msg = msg.trim();
 
 	return {
@@ -304,7 +308,7 @@ export class ModuleSpeech extends BaseModule {
 					data.Content += ` <> ${orig.Text}`;
 				}
 
-				currentlyProcessedMessage = parseMsg(data.Content);
+				currentlyProcessedMessage = parseMsg(args[0].Content);
 				if (currentlyProcessedMessage) {
 					const msg2 = processMsg(currentlyProcessedMessage);
 					// Message is rejected
@@ -315,7 +319,7 @@ export class ModuleSpeech extends BaseModule {
 				}
 				
 				console.log(data);
-				console.log(orig);
+				console.log(args);
 				console.log(currentlyProcessedMessage);
 			}
 			return next(args);
