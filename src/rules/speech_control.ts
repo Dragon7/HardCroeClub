@@ -98,11 +98,31 @@ export function initRules_bc_speech_control() {
 			"since those are now garbled by the rule. OOC ARE ALSO AFFECTED.",
 
 		keywords: ["garbling", "whispering"],
+		triggerTexts: {
+			infoBeep: "You are not allowed to use OOC in messages while gagged.",
+			attempt_log: "PLAYER_NAME tried to use OOC in a message while gagged",
+			log: "PLAYER_NAME used OOC in a message while gagged",
+		},
 		defaultLimit: ConditionsLimit.limited,
 		init(state) {
 			registerSpeechHook({
 				modify: (info, message) => {
+					console.log(info);
+					console.log("speech_garble_whispers speech_control modify");
 					return state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
+				},
+				allowSend: (msg) => {
+					if (state.isEnforced && msg.hasOOC) {
+						console.log("OOC talk whas blocked");
+						state.triggerAttempt();
+						return SpeechHookAllow.BLOCK;
+					}
+					return SpeechHookAllow.ALLOW;
+				},
+				onSend: (msg) => {
+					if (state.inEffect && msg.hasOOC) {
+						state.trigger();
+					}
 				},
 			});
 		},

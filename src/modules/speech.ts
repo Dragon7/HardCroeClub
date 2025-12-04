@@ -233,7 +233,7 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
-		hookFunction("ChatRoomSendChat", 2, (args, next) => {
+		hookFunction("ChatRoomSendChat", 5, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
 			if (msg.length) {
@@ -243,13 +243,11 @@ export class ModuleSpeech extends BaseModule {
 			}
 			const ret = next(args);
 			currentlyProcessedMessage = null;
-
-			//console.log(args);
 			return ret;
 		});
 
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
-		hookFunction("CommandParse", 2, (args, next) => {
+		hookFunction("CommandParse", 5, (args, next) => {
 			const msg = args[0].trim();
 			if (msg && currentlyProcessedMessage) {
 				currentlyProcessedMessage = parseMsg(msg);
@@ -262,8 +260,6 @@ export class ModuleSpeech extends BaseModule {
 					args[0] = msg2;
 				}
 			}
-
-			//console.log(args);
 			return next(args);
 		});
 
@@ -281,27 +277,13 @@ export class ModuleSpeech extends BaseModule {
 					data.Dictionary = [];
 				}
 				(data.Dictionary as ChatMessageDictionary).push({ Tag: "BCX_ORIGINAL_MESSAGE", Text: currentlyProcessedMessage.originalMessage });
-
-				const msg2 = processMsg(currentlyProcessedMessage);
-				// Message is rejected
-				if (msg2 === null) {
-					args[1].target = null;
-					args[1].Dictionary.message.Type = "Typing";
-					args[1].Dictionary.message.Target = null;
-					return true;
-				}
-
-				//console.log(currentlyProcessedMessage);
 			}
-
-			console.log(currentlyProcessedMessage);
-			console.log(args);
 			return next(args);
 		});
 
-		hookFunction("ChatRoomMessage", 3, (args, next) => {
+		hookFunction("ChatRoomMessage", 1, (args, next) => {
 			const data = args[0];
-			if (
+			if (antigarble > 0 &&
 				isObject(data) &&
 				data.Type === "Whisper" &&
 				typeof data.Content === "string" &&
@@ -311,25 +293,12 @@ export class ModuleSpeech extends BaseModule {
 				if (orig && data.Content !== orig.Text) {
 					data.Content += ` <> ${orig.Text}`;
 				}
-
-				currentlyProcessedMessage = parseMsg(args[0].Content);
-				if (currentlyProcessedMessage) {
-					const msg2 = processMsg(currentlyProcessedMessage);
-					// Message is rejected
-					if (msg2 === null) {
-						args.splice(0);
-						return true;
-					}
-					args[0].Content = msg2;
-				}
 			}
-
-			//console.log(args);
 			return next(args);
 		});
 		//#endregion
 
-		hookFunction("ChatRoomSendAttemptEmote", 2, (args, next) => {
+		hookFunction("ChatRoomSendAttemptEmote", 5, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			currentlyProcessedMessage = parseMsg(rawMessage.trim());
@@ -346,7 +315,7 @@ export class ModuleSpeech extends BaseModule {
 			}
 		});
 
-		hookFunction("ChatRoomSendEmote", 2, (args, next) => {
+		hookFunction("ChatRoomSendEmote", 5, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			const result = parseMsg(rawMessage);
