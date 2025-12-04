@@ -299,6 +299,17 @@ export class ModuleSpeech extends BaseModule {
 				if (orig && data.Content !== orig.Text) {
 					data.Content += ` <> ${orig.Text}`;
 				}
+
+				currentlyProcessedMessage = parseMsg(args[0].Content);
+				if (currentlyProcessedMessage) {
+					const msg2 = processMsg(currentlyProcessedMessage);
+					// Message is rejected
+					if (msg2 === null) {
+						args = [];
+						return true;
+					}
+					args[0].Content = msg2;
+				}
 			}
 
 			console.log(args);

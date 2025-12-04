@@ -108,6 +108,8 @@ export function initRules_bc_speech_control() {
 		},
 		load(state) {
 			hookFunction("ChatRoomShouldBlockGaggedOOCMessage", 2, (args, next) => {
+				console.log(args);
+				console.log("speech_garble_whispers speech_control");
 				if (state.isEnforced && ChatRoomTargetMemberNumber >= 0) return false;
 				return next(args);
 			}, ModuleCategory.Rules);
