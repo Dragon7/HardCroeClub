@@ -297,10 +297,21 @@ export class ModuleSpeech extends BaseModule {
 				typeof data.Content === "string" &&
 				Array.isArray(data.Dictionary)
 			) {
-				const info = parseMsg(data.Content);
+				
+
 				const orig: any = data.Dictionary.find((i: unknown) => isObject(i) && i.Tag === "BCX_ORIGINAL_MESSAGE" && typeof i.Text === "string");
 				if (orig && data.Content !== orig.Text) {
 					data.Content += ` <> ${orig.Text}`;
+				}
+
+				currentlyProcessedMessage = parseMsg(data.Content);
+				if (currentlyProcessedMessage) {
+					const msg2 = processMsg(currentlyProcessedMessage);
+					// Message is rejected
+					if (msg2 === null) {
+						return true;
+					}
+					args[0].Content = msg2;
 				}
 				
 				console.log(data);
