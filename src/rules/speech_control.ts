@@ -111,25 +111,10 @@ export function initRules_bc_speech_control() {
 					console.log("speech_garble_whispers speech_control modify");
 					return state.isEnforced && info.type === "Whisper" ? callOriginal("SpeechGarble", [Player, message, true]) : message
 				},
-				allowSend: (msg) => {
-					if (state.isEnforced && msg.hasOOC) {
-						console.log("OOC talk whas blocked");
-						state.triggerAttempt();
-						return SpeechHookAllow.BLOCK;
-					}
-					return SpeechHookAllow.ALLOW;
-				},
-				onSend: (msg) => {
-					if (state.inEffect && msg.hasOOC) {
-						state.trigger();
-					}
-				},
 			});
 		},
 		load(state) {
 			hookFunction("ChatRoomShouldBlockGaggedOOCMessage", 2, (args, next) => {
-				console.log(args);
-				console.log("speech_garble_whispers speech_control");
 				if (state.isEnforced && ChatRoomTargetMemberNumber >= 0) return false;
 				return next(args);
 			}, ModuleCategory.Rules);

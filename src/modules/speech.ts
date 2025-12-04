@@ -233,7 +233,7 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
-		hookFunction("ChatRoomSendChat", 5, (args, next) => {
+		hookFunction("ChatRoomSendChat", 1, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
 			if (msg.length) {
@@ -247,7 +247,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
-		hookFunction("CommandParse", 5, (args, next) => {
+		hookFunction("CommandParse", 1, (args, next) => {
 			const msg = args[0].trim();
 			if (msg && currentlyProcessedMessage) {
 				currentlyProcessedMessage = parseMsg(msg);
@@ -264,7 +264,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		//#region Antigarble for pre-garbled whispers
-		hookFunction("ServerSend", 1, (args: any, next) => {
+		hookFunction("ServerSend", 2, (args: any, next) => {
 			const data = args[1];
 			if (args[0] === "ChatRoomChat" &&
 				currentlyProcessedMessage &&
@@ -281,7 +281,7 @@ export class ModuleSpeech extends BaseModule {
 			return next(args);
 		});
 
-		hookFunction("ChatRoomMessage", 1, (args, next) => {
+		hookFunction("ChatRoomMessage", 2, (args, next) => {
 			const data = args[0];
 			if (antigarble > 0 &&
 				isObject(data) &&
@@ -298,7 +298,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 		//#endregion
 
-		hookFunction("ChatRoomSendAttemptEmote", 5, (args, next) => {
+		hookFunction("ChatRoomSendAttemptEmote", 1, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			currentlyProcessedMessage = parseMsg(rawMessage.trim());
@@ -315,7 +315,7 @@ export class ModuleSpeech extends BaseModule {
 			}
 		});
 
-		hookFunction("ChatRoomSendEmote", 5, (args, next) => {
+		hookFunction("ChatRoomSendEmote", 1, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			const result = parseMsg(rawMessage);
