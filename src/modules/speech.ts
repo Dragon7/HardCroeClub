@@ -240,10 +240,7 @@ export class ModuleSpeech extends BaseModule {
 		// 3
 		hookFunction("ChatRoomSendChat", 3, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
-			console.log(inputChat);
 			const msg = inputChat?.value.trim() ?? "";
-			console.log(msg);
-			console.log(args);
 			if (msg.length) {
 				const info = parseMsg(msg);
 				if (info?.type !== "Command")
@@ -288,7 +285,6 @@ export class ModuleSpeech extends BaseModule {
 				}
 				(data.Dictionary as ChatMessageDictionary).push({ Tag: "BCX_ORIGINAL_MESSAGE", Text: currentlyProcessedMessage.originalMessage });
 			}
-			console.log(args);
 			return next(args);
 		});
 
@@ -305,8 +301,9 @@ export class ModuleSpeech extends BaseModule {
 				if (orig && data.Content !== orig.Text) {
 					data.Content += ` <> ${orig.Text}`;
 				}
+				console.log(data);
+				console.log(orig);
 			}
-			console.log(data);
 			return next(args);
 		});
 		//#endregion
