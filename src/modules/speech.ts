@@ -237,11 +237,13 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
+		// 3
 		hookFunction("ChatRoomSendChat", 3, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			console.log(inputChat);
 			const msg = inputChat?.value.trim() ?? "";
 			console.log(msg);
+			console.log(args);
 			if (msg.length) {
 				const info = parseMsg(msg);
 				if (info?.type !== "Command")
@@ -271,6 +273,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		//#region Antigarble for pre-garbled whispers
+		// 1
 		hookFunction("ServerSend", 1, (args: any, next) => {
 			const data = args[1];
 			if (args[0] === "ChatRoomChat" &&
@@ -289,6 +292,7 @@ export class ModuleSpeech extends BaseModule {
 			return next(args);
 		});
 
+		// 2
 		hookFunction("ChatRoomMessage", 1, (args, next) => {
 			const data = args[0];
 			if (antigarble > 0 &&
