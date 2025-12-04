@@ -106,6 +106,7 @@ export function initRules_bc_speech_control() {
 		},
 		load(state) {
 			hookFunction("ChatRoomShouldBlockGaggedOOCMessage", 2, (args, next) => {
+				console.log("hooked gagged ooc garble whisper");
 				if (state.isEnforced && ChatRoomTargetMemberNumber >= 0) return false;
 				return next(args);
 			}, ModuleCategory.Rules);
@@ -828,10 +829,15 @@ export function initRules_bc_speech_control() {
 				modify(info, message) {
 					if (state.isEnforced) {
 						const replaceSpokenMap = parseStringReplacingSyntax(state.customData?.stringWithReplacingSyntax);
+						const tmp_messages = message.split(" ");
+						tmp_messages.forEach((subject,index) => {
 						for (const [word, sub] of replaceSpokenMap.entries()) {
-							const rx = new RegExp(`\\b${escapeRegExp(word)}\\b`, "g");
-							message = message.replaceAll(rx, sub);
-						}
+								if(subject === word){
+									tmp_messages[index] = sub;
+								}
+							}
+						});
+						message = tmp_messages.join(" ");
 					}
 					return message;
 				},
