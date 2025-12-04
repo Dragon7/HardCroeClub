@@ -233,7 +233,7 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
-		hookFunction("ChatRoomSendChat", 5, (args, next) => {
+		hookFunction("ChatRoomSendChat", 2, (args, next) => {
 			console.log("hook check ChatRoomSendChat");
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
