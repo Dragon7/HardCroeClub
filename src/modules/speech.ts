@@ -115,22 +115,14 @@ function parseMsg(msg: string): (SpeechMessageInfo | null) {
 	type = msg.startsWith("*") || msg.startsWith("/me") || msg.startsWith("/action") ||
 		(Player.ChatSettings?.MuStylePoses && msg.startsWith(":") && msg.length > 3) ? "Emote" : type;
 
-	console.log(msg);
-	//const noOOCMessage = msg.replace(/\([^)]*\)*\s?/gs, "");
-	const noOOCMessage = msg.replace(/\([^)]*\)\s?/gs, "");
+	const noOOCMessage = msg.replace(/\([^)]*\)*\s?/gs, "");
 	const hasOOC: boolean = msg.includes("(");
-
-	console.log(msg);
 
 	if (Player.ChatSettings?.MuStylePoses && msg.startsWith(":")) msg = msg.substring(1);
 	else {
 		msg = msg.replace(/^\*/, "").replace(/\*$/, "");
 		if (msg.startsWith("/me ")) msg = msg.replace("/me ", "");
 		if (msg.startsWith("/action ")) msg = msg.replace("/action ", "*");
-	}
-
-	if (type === "Whisper" && SpeechHookAllow.BLOCK) {
-		type = "Chat";
 	}
 
 	msg = msg.trim();
@@ -241,8 +233,7 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
-		// 3
-		hookFunction("ChatRoomSendChat", 3, (args, next) => {
+		hookFunction("ChatRoomSendChat", 2, (args, next) => {
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
 			if (msg.length) {
@@ -256,9 +247,8 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
-		hookFunction("CommandParse", 3, (args, next) => {
+		hookFunction("CommandParse", 2, (args, next) => {
 			const msg = args[0].trim();
-			console.log(msg);
 			if (msg && currentlyProcessedMessage) {
 				currentlyProcessedMessage = parseMsg(msg);
 				if (currentlyProcessedMessage) {
@@ -274,7 +264,6 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		//#region Antigarble for pre-garbled whispers
-		// 1
 		hookFunction("ServerSend", 1, (args: any, next) => {
 			const data = args[1];
 			if (args[0] === "ChatRoomChat" &&
@@ -292,8 +281,7 @@ export class ModuleSpeech extends BaseModule {
 			return next(args);
 		});
 
-		// 2
-		hookFunction("ChatRoomMessage", 1, (args, next) => {
+		hookFunction("ChatRoomMessage", 3, (args, next) => {
 			const data = args[0];
 			if (
 				isObject(data) &&
@@ -301,32 +289,16 @@ export class ModuleSpeech extends BaseModule {
 				typeof data.Content === "string" &&
 				Array.isArray(data.Dictionary)
 			) {
-				
-
 				const orig: any = data.Dictionary.find((i: unknown) => isObject(i) && i.Tag === "BCX_ORIGINAL_MESSAGE" && typeof i.Text === "string");
 				if (orig && data.Content !== orig.Text) {
 					data.Content += ` <> ${orig.Text}`;
 				}
-
-				currentlyProcessedMessage = parseMsg(args[0].Content);
-				if (currentlyProcessedMessage) {
-					const msg2 = processMsg(currentlyProcessedMessage);
-					// Message is rejected
-					if (msg2 === null) {
-						return true;
-					}
-					args[0].Content = msg2;
-				}
-				
-				console.log(data);
-				console.log(args);
-				console.log(currentlyProcessedMessage);
 			}
 			return next(args);
 		});
 		//#endregion
 
-		hookFunction("ChatRoomSendAttemptEmote", 3, (args, next) => {
+		hookFunction("ChatRoomSendAttemptEmote", 2, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			currentlyProcessedMessage = parseMsg(rawMessage.trim());
@@ -343,7 +315,7 @@ export class ModuleSpeech extends BaseModule {
 			}
 		});
 
-		hookFunction("ChatRoomSendEmote", 3, (args, next) => {
+		hookFunction("ChatRoomSendEmote", 2, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			const result = parseMsg(rawMessage);
@@ -355,7 +327,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		//#region Antigarble
-		hookFunction("SpeechGarble", 4, (args, next) => {
+		hookFunction("SpeechGarble", 6, (args, next) => {
 			//			if (antigarble === 2) return args[1];
 			const res = next(args);
 			//			if (typeof res === "string" && res !== args[1] && antigarble === 1) res += ` <> ${args[1]}`;
