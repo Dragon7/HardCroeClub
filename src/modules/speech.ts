@@ -305,7 +305,7 @@ export class ModuleSpeech extends BaseModule {
 					const msg2 = processMsg(currentlyProcessedMessage);
 					// Message is rejected
 					if (msg2 === null) {
-						args = null;
+						args.length = 0;
 						return true;
 					}
 					args[0].Content = msg2;
