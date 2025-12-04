@@ -269,6 +269,7 @@ export class ModuleSpeech extends BaseModule {
 		hookFunction("ServerSend", 1, (args: any, next) => {
 			console.log("hook check server send");
 			const data = args[1];
+			console.log(data);
 			if (args[0] === "ChatRoomChat" &&
 				currentlyProcessedMessage &&
 				isObject(data) &&
