@@ -255,6 +255,7 @@ export class ModuleSpeech extends BaseModule {
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
 		hookFunction("CommandParse", 3, (args, next) => {
 			const msg = args[0].trim();
+			console.log(msg);
 			if (msg && currentlyProcessedMessage) {
 				currentlyProcessedMessage = parseMsg(msg);
 				if (currentlyProcessedMessage) {
@@ -284,6 +285,7 @@ export class ModuleSpeech extends BaseModule {
 				}
 				(data.Dictionary as ChatMessageDictionary).push({ Tag: "BCX_ORIGINAL_MESSAGE", Text: currentlyProcessedMessage.originalMessage });
 			}
+			console.log(args);
 			return next(args);
 		});
 
@@ -300,6 +302,7 @@ export class ModuleSpeech extends BaseModule {
 					data.Content += ` <> ${orig.Text}`;
 				}
 			}
+			console.log(data);
 			return next(args);
 		});
 		//#endregion
