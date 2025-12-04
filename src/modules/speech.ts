@@ -233,7 +233,7 @@ export class ModuleSpeech extends BaseModule {
 		 */
 
 		// We're sending something, pre-parse the message
-		hookFunction("ChatRoomSendChat", 2, (args, next) => {
+		hookFunction("ChatRoomSendChat", 3, (args, next) => {
 			console.log("hook check ChatRoomSendChat");
 			const inputChat = document.getElementById("InputChat") as HTMLTextAreaElement | null;
 			const msg = inputChat?.value.trim() ?? "";
@@ -248,7 +248,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		// Intercept commands first, in case this is from a Enter-submitted input from chat
-		hookFunction("CommandParse", 5, (args, next) => {
+		hookFunction("CommandParse", 3, (args, next) => {
 			console.log("hook check CommandParse");
 			const msg = args[0].trim();
 			if (msg && currentlyProcessedMessage) {
@@ -302,7 +302,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 		//#endregion
 
-		hookFunction("ChatRoomSendAttemptEmote", 5, (args, next) => {
+		hookFunction("ChatRoomSendAttemptEmote", 3, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			currentlyProcessedMessage = parseMsg(rawMessage.trim());
@@ -319,7 +319,7 @@ export class ModuleSpeech extends BaseModule {
 			}
 		});
 
-		hookFunction("ChatRoomSendEmote", 5, (args, next) => {
+		hookFunction("ChatRoomSendEmote", 3, (args, next) => {
 			if (currentlyProcessedMessage) return next(args); // We already processed that from the CommandParse hook above
 			const rawMessage = args[0];
 			const result = parseMsg(rawMessage);
@@ -331,7 +331,7 @@ export class ModuleSpeech extends BaseModule {
 		});
 
 		//#region Antigarble
-		hookFunction("SpeechGarble", 6, (args, next) => {
+		hookFunction("SpeechGarble", 4, (args, next) => {
 			//			if (antigarble === 2) return args[1];
 			const res = next(args);
 			//			if (typeof res === "string" && res !== args[1] && antigarble === 1) res += ` <> ${args[1]}`;
