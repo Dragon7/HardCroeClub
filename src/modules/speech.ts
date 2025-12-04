@@ -244,7 +244,7 @@ export class ModuleSpeech extends BaseModule {
 			const ret = next(args);
 			currentlyProcessedMessage = null;
 
-			console.log(args);
+			//console.log(args);
 			return ret;
 		});
 
@@ -263,7 +263,7 @@ export class ModuleSpeech extends BaseModule {
 				}
 			}
 
-			console.log(args);
+			//console.log(args);
 			return next(args);
 		});
 
@@ -291,7 +291,7 @@ export class ModuleSpeech extends BaseModule {
 					return true;
 				}
 
-				//console.log(currentlyProcessedMessage);
+				console.log(currentlyProcessedMessage);
 			}
 
 			console.log(args);
@@ -323,7 +323,7 @@ export class ModuleSpeech extends BaseModule {
 				}
 			}
 
-			console.log(args);
+			//console.log(args);
 			return next(args);
 		});
 		//#endregion
