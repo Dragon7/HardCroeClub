@@ -129,7 +129,7 @@ function parseMsg(msg: string): (SpeechMessageInfo | null) {
 		if (msg.startsWith("/action ")) msg = msg.replace("/action ", "*");
 	}
 
-	if(type === "Whisper" && SpeechHookAllow.BLOCK){
+	if (type === "Whisper" && SpeechHookAllow.BLOCK) {
 		type = "Chat";
 	}
 
